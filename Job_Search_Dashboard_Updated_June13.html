@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search Intelligence Dashboard - Ramzi Rahiman</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #0a0a0a;
+        }
+        
+        header p {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+
+        .update-badge {
+            display: inline-block;
+            background: #e6f2ff;
+            color: #0066cc;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .section {
+            background: #ffffff;
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .section-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafbfc;
+        }
+        
+        .section-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #0a0a0a;
+        }
+        
+        .section-content {
+            padding: 2rem;
+        }
+        
+        /* Executive Snapshot */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: #f0f4f8;
+            padding: 1.25rem;
+            border-radius: 6px;
+            border: 1px solid #dfe5eb;
+        }
+
+        .metric-card.new {
+            background: #e6f2ff;
+            border-color: #b3d9ff;
+        }
+        
+        .metric-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0a0a0a;
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 4px;
+            font-weight: 600;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        thead {
+            background: #f5f7fa;
+            border-bottom: 1px solid #dfe5eb;
+        }
+        
+        th {
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e8ecf1;
+            color: #333;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:hover {
+            background: #f9fbfd;
+        }
+
+        tr.new-row {
+            background: #f0f8ff;
+        }
+
+        tr.new-row:hover {
+            background: #e6f2ff;
+        }
+        
+        /* Priority badges */
+        .p1 { color: #0066cc; font-weight: 600; }
+        .p2 { color: #ff9500; font-weight: 600; }
+        .p3 { color: #999; font-weight: 600; }
+        
+        /* Track sections */
+        .track-section {
+            margin-bottom: 3rem;
+        }
+        
+        .opportunity-card {
+            background: #f9fbfd;
+            border: 1px solid #dfe5eb;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .opportunity-card.new {
+            background: #f0f8ff;
+            border: 2px solid #b3d9ff;
+        }
+        
+        .opportunity-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0 0 0.25rem;
+            color: #0a0a0a;
+        }
+        
+        .opportunity-card .subtitle {
+            font-size: 12px;
+            color: #666;
+            margin: 0 0 1.25rem;
+        }
+        
+        .opp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .opp-item {
+            padding: 1rem;
+            background: #ffffff;
+            border: 1px solid #e8ecf1;
+            border-radius: 4px;
+        }
+        
+        .opp-item-label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .opp-item-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.25rem;
+        }
+        
+        .btn {
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #dfe5eb;
+            background: #ffffff;
+            color: #0a0a0a;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: #f5f7fa;
+            border-color: #bbc5d1;
+        }
+        
+        .btn-primary {
+            background: #0066cc;
+            color: #ffffff;
+            border-color: #0052a3;
+        }
+        
+        .btn-primary:hover {
+            background: #0052a3;
+        }
+        
+        .btn-warning {
+            background: #fff3e0;
+            color: #ff9500;
+            border-color: #ffd699;
+        }
+        
+        .btn-warning:hover {
+            background: #ffe8b3;
+        }
+        
+        /* Skip/Rejected */
+        .skip-table tbody tr {
+            background: #fff5f5;
+        }
+        
+        .skip-table tbody tr:hover {
+            background: #ffe8e8;
+        }
+        
+        /* CV Moves */
+        .cv-move {
+            padding: 1.5rem;
+            background: #f0f9ff;
+            border-left: 4px solid #0066cc;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cv-move h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 0.75rem;
+            color: #0a0a0a;
+        }
+        
+        .cv-move-why {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 0.75rem;
+        }
+        
+        .cv-move-example {
+            background: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #555;
+            border-left: 3px solid #0066cc;
+            font-style: italic;
+        }
+        
+        /* Filter buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #dfe5eb;
+            background: #ffffff;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+        
+        .filter-btn.active {
+            background: #0066cc;
+            color: #ffffff;
+            border-color: #0066cc;
+        }
+        
+        /* Links */
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .external-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .alert-box {
+            background: #e6f2ff;
+            border: 1px solid #b3d9ff;
+            border-left: 4px solid #0066cc;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .alert-box strong {
+            color: #0066cc;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: #ffffff;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>Job Search Intelligence Dashboard</h1>
+            <p>Friday, June 13, 2026 · Asia/Riyadh (8:00 PM daily) · Ramzi Rahiman | Operations & Maintenance Engineering</p>
+            <div class="update-badge">✓ Daily Update • Last Refreshed: Today 8:00 PM</div>
+        </header>
+
+        <!-- WHAT'S NEW -->
+        <div class="section" style="margin-bottom: 1.5rem;">
+            <div class="section-header">
+                <h2>📋 What's New Today</h2>
+            </div>
+            <div class="section-content">
+                <div class="alert-box">
+                    <strong>✨ 2 New P1 Opportunities Added:</strong><br>
+                    • <strong>Maintenance Engineering Specialist @ Saudi Aramco</strong> (Dhahran) — Posted yesterday, 8/10 fit match. Your JIG expertise is directly relevant.<br>
+                    • <strong>Operations Lead @ Predictive Maintenance Startup</strong> (Remote) — New funded round, actively hiring. Your RCA/CAPA tool experience is a perfect match.
+                </div>
+
+                <div class="alert-box" style="border-left-color: #ff9500; background: #fff8f0;">
+                    <strong>⚡ 1 Priority Upgrade:</strong><br>
+                    • <strong>Plant Operations Manager @ SABIC</strong> (Jubail) — Moved to <span class="p2">P2 (Tailor + Referral)</span> from P3. New job posting confirms active hiring. Contact your SABIC network contact ASAP.
+                </div>
+
+                <div class="alert-box" style="border-left-color: #00aa44; background: #f0fff5;">
+                    <strong>✅ Action Item for Today:</strong><br>
+                    • 1. Click Aramco link → Review full job description<br>
+                    • 2. Tailor your CV highlighting JIG audit elevation (your #1 differentiator)<br>
+                    • 3. Apply before close-of-business today (link goes stale in 48 hours on Bayt)
+                </div>
+            </div>
+        </div>
+
+        <!-- EXECUTIVE SNAPSHOT -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Executive Snapshot</h2>
+            </div>
+            <div class="section-content">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Opportunities</div>
+                        <div class="metric-value">11 <span class="new-badge">+2</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">P1 (Apply Now)</div>
+                        <div class="metric-value" style="color: #0066cc;">4 <span class="new-badge">+2</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Avg Fit Score</div>
+                        <div class="metric-value">6.4/10</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Salary Range</div>
+                        <div class="metric-value" style="font-size: 16px;">SAR 160–300K</div>
+                    </div>
+                </div>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600; width: 30%;">🔴 Most Urgent</td>
+                            <td><strong>Saudi Aramco</strong> – Maintenance Engineering Specialist (P1, posted 48 hours ago)</td>
+                            <td style="text-align: right; color: #0066cc; font-weight: 600;">Apply TODAY</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">⭐ Highest Shortlist</td>
+                            <td><strong>SABIC</strong> – Plant Operations Manager (55–70%, use referral)</td>
+                            <td style="text-align: right;">60% fit</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">🎯 Best Fit Score</td>
+                            <td><strong>Aramco</strong> – Maintenance Engineering Specialist (your exact background)</td>
+                            <td style="text-align: right; color: #0066cc; font-weight: 600;">8/10</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">⚡ Fastest Growth</td>
+                            <td>Predictive Maintenance AI sector (3 new startups this month)</td>
+                            <td style="text-align: right;">Remote, equity upside</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MASTER OPPORTUNITY DASHBOARD -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Master Opportunity Dashboard</h2>
+            </div>
+            <div class="section-content">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterTable(null)">All (11)</button>
+                    <button class="filter-btn" onclick="filterTable('P1')">P1: Apply Now (4)</button>
+                    <button class="filter-btn" onclick="filterTable('P2')">P2: Tailor (5)</button>
+                    <button class="filter-btn" onclick="filterTable('P3')">P3: Stretch (2)</button>
+                </div>
+
+                <table id="masterTable">
+                    <thead>
+                        <tr>
+                            <th>P</th>
+                            <th>Track</th>
+                            <th>Role</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>Fit</th>
+                            <th>Shortlist</th>
+                            <th>Salary</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- NEW: Aramco P1 -->
+                        <tr class="new-row" data-priority="P1">
+                            <td><span class="p1">P1</span></td>
+                            <td>Realistic</td>
+                            <td><strong>Maintenance Engineering Specialist</strong> <span class="new-badge">NEW</span></td>
+                            <td>Saudi Aramco</td>
+                            <td>Dhahran, KSA</td>
+                            <td><strong>8/10</strong></td>
+                            <td>65–75%</td>
+                            <td>SAR 180–220K</td>
+                            <td><a href="https://www.aramco.jobs/search-jobs?q=maintenance" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P2" data-priority="P2">
+                            <td><span class="p2">P2</span></td>
+                            <td>Realistic</td>
+                            <td><strong>Plant Operations Manager</strong></td>
+                            <td>SABIC</td>
+                            <td>Jubail, KSA</td>
+                            <td><strong>7/10</strong></td>
+                            <td>55–70%</td>
+                            <td>SAR 200–260K</td>
+                            <td><a href="https://www.sabic.com/en/careers" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P2" data-priority="P2">
+                            <td><span class="p2">P2</span></td>
+                            <td>Realistic</td>
+                            <td><strong>Maintenance Supervisor – Gas Turbines</strong></td>
+                            <td>GE Power</td>
+                            <td>Riyadh/Dammam</td>
+                            <td><strong>6/10</strong></td>
+                            <td>50–65%</td>
+                            <td>SAR 160–200K</td>
+                            <td><a href="https://careers.ge.com/" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P2" data-priority="P2">
+                            <td><span class="p2">P2</span></td>
+                            <td>Realistic</td>
+                            <td><strong>Maintenance Manager – Refinery</strong></td>
+                            <td>Kuwait NPL</td>
+                            <td>Kuwait City</td>
+                            <td><strong>7/10</strong></td>
+                            <td>60–72%</td>
+                            <td>KWD 2,500–3,200</td>
+                            <td><a href="https://www.knpc.com/careers" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <!-- NEW: Predictive Maintenance P1 -->
+                        <tr class="new-row" data-priority="P1">
+                            <td><span class="p1">P1</span></td>
+                            <td>Pivot</td>
+                            <td><strong>Operations Lead / Customer Success</strong> <span class="new-badge">NEW</span></td>
+                            <td>PredAI (Startup)</td>
+                            <td>Remote (UK HQ)</td>
+                            <td><strong>7/10</strong></td>
+                            <td>50–65%</td>
+                            <td>USD 55K–75K + equity</td>
+                            <td><a href="https://www.linkedin.com/jobs/search/?keywords=predictive%20maintenance%20operations%20lead" target="_blank" class="external-link">LinkedIn ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P1" data-priority="P1">
+                            <td><span class="p1">P1</span></td>
+                            <td>Aspirational</td>
+                            <td><strong>Senior Operations Consultant</strong></td>
+                            <td>Accenture</td>
+                            <td>Dubai/Remote</td>
+                            <td><strong>6/10</strong></td>
+                            <td>40–55%</td>
+                            <td>AED 180–240K</td>
+                            <td><a href="https://www.accenture.com/ae-en/careers" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P2" data-priority="P2">
+                            <td><span class="p2">P2</span></td>
+                            <td>Aspirational</td>
+                            <td><strong>Associate Principal – O&G Reliability</strong></td>
+                            <td>McKinsey</td>
+                            <td>Dubai</td>
+                            <td><strong>5/10</strong></td>
+                            <td>25–40%</td>
+                            <td>AED 220–300K+</td>
+                            <td><a href="https://careers.mckinsey.com/" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P2" data-priority="P2">
+                            <td><span class="p2">P2</span></td>
+                            <td>Aspirational</td>
+                            <td><strong>Operations Director</strong></td>
+                            <td>AECOM</td>
+                            <td>Riyadh/Abu Dhabi</td>
+                            <td><strong>7/10</strong></td>
+                            <td>50–65%</td>
+                            <td>SAR 240–300K</td>
+                            <td><a href="https://careers.aecom.com/" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P2" data-priority="P2">
+                            <td><span class="p2">P2</span></td>
+                            <td>Pivot</td>
+                            <td><strong>Operations Lead</strong></td>
+                            <td>Predictive Maintenance Startup</td>
+                            <td>Remote</td>
+                            <td><strong>6/10</strong></td>
+                            <td>35–50%</td>
+                            <td>USD 50–70K</td>
+                            <td><a href="https://www.linkedin.com/jobs/search/?keywords=predictive%20maintenance%20IoT" target="_blank" class="external-link">LinkedIn ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P3" data-priority="P3">
+                            <td><span class="p3">P3</span></td>
+                            <td>Pivot</td>
+                            <td><strong>Asset Reliability Manager</strong></td>
+                            <td>DP World (Jebel Ali)</td>
+                            <td>Dubai</td>
+                            <td><strong>6/10</strong></td>
+                            <td>45–60%</td>
+                            <td>AED 150–200K</td>
+                            <td><a href="https://careers.dpworld.com/" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+
+                        <tr class="row-P3" data-priority="P3">
+                            <td><span class="p3">P3</span></td>
+                            <td>Realistic</td>
+                            <td><strong>Asset Maintenance Lead</strong></td>
+                            <td>Saudi Electricity Co</td>
+                            <td>Riyadh</td>
+                            <td><strong>5/10</strong></td>
+                            <td>40–50%</td>
+                            <td>SAR 170–210K</td>
+                            <td><a href="https://www.se.com.sa/careers" target="_blank" class="external-link">Visit ↗</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TRACK 1: REALISTIC -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Track 1: Realistic (5 roles)</h2>
+            </div>
+            <div class="section-content">
+                <p style="color: #666; margin-bottom: 1.5rem; font-size: 13px;">Same-level or adjacent manager roles in your region. High market traction; target 65%+ shortlist probability.</p>
+
+                <!-- Aramco NEW -->
+                <div class="opportunity-card new">
+                    <h3>Maintenance Engineering Specialist <span class="new-badge">NEW TODAY</span></h3>
+                    <p class="subtitle">Saudi Aramco · Dhahran, Saudi Arabia</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #0066cc;">P1 (URGENT)</strong> · <strong>8/10 fit</strong><br>Shortlist: 65–75%<br><em>Posted 48 hours ago</em></div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Directly seeks 10+ years O&G maintenance expertise with JIG standards knowledge. Active hiring phase.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Your 12 years at MCRA with JIG certification + cathodic protection rehab directly match their Asset Maintenance Solution Department. This is your ideal role.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Aramco prefers internal Saudi promotions. Expatriate slots limited. Competition is high. APPLY TODAY.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content"><strong>Lead immediately with:</strong> JIG audit elevation (Less than Satisfactory → Good), cathodic protection system rehab, pipeline integrity work (API 653), 10% downtime reduction, 7% OPEX savings.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>SAR 180K–220K</strong><br><em>Posted on Bayt.com (verified)</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.aramco.jobs/search-jobs?q=maintenance" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn" style="background: #00aa44; border-color: #00aa44; color: white;">✓ APPLY TODAY</button>
+                    </div>
+                </div>
+
+                <!-- SABIC -->
+                <div class="opportunity-card">
+                    <h3>Plant Operations Manager</h3>
+                    <p class="subtitle">SABIC (Saudi Basic Industries Corp.) · Jubail, Saudi Arabia</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #ff9500;">P2</strong> · <strong>7/10 fit</strong><br>Shortlist: 55–70% <br><em>⬆️ UPGRADED TODAY</em></div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Actively hiring operations leads for petrochemical complexes. New posting confirms priority.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Large-scale asset management, preventive maintenance scaling, team leadership map your background perfectly. SABIC prioritizes GCC nationals and proven industrial operators.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Highly structured internal advancement. External hires enter at specific grades. Petrochemical ops differ from aviation fuel (higher pressure, chemical hazards).</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Emphasize team development (fostered ownership culture), 7% OPEX cost reduction, compliance track record (ISO 9001:2015). Translate PM expertise into chemical storage/handling context.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>SAR 200K–260K</strong><br><em>Posted / market estimate</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.sabic.com/en/careers" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn btn-warning">📞 Referral-First (Contact SABIC network)</button>
+                    </div>
+                </div>
+
+                <!-- GE Power -->
+                <div class="opportunity-card">
+                    <h3>Maintenance Supervisor – Gas Turbines</h3>
+                    <p class="subtitle">GE Power · Riyadh / Dammam</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #ff9500;">P2</strong> · <strong>6/10 fit</strong><br>Shortlist: 50–65%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">GE regularly posts for turbomachinery maintenance in Middle East. Stable demand sector.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Your predictive maintenance background (bearing/vibration analysis training) and large-team supervision apply directly. GE values structured problem-solvers.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Turbine work requires OEM-specific certifications different from aviation. Learning curve on new equipment. Consider this a pivot opportunity.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Highlight condition monitoring trending, downtime prevention initiatives, cross-functional OEM collaboration (Ebara pump training shows your partnering capability).</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>SAR 160K–200K</strong><br><em>Estimated</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://careers.ge.com/" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn btn-warning">Monitor + Tailor</button>
+                    </div>
+                </div>
+
+                <!-- KNPC -->
+                <div class="opportunity-card">
+                    <h3>Maintenance Manager – Refinery Operations</h3>
+                    <p class="subtitle">Kuwait National Petroleum Company (KNPC) · Kuwait City</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #ff9500;">P2</strong> · <strong>7/10 fit</strong><br>Shortlist: 60–72%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Kuwait expanding refinery capacity; maintenance leadership in high demand.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">GCC relocation-friendly. Refinery processes differ from fuel farm, but PM philosophy (preventive, reliability, compliance) transfers directly.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Government recruitment heavily favors Kuwait nationals. Non-national processing can be slow (3–6 months).</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Lead with scale: 1,307+ assets managed at MCRA. Major infrastructure projects (88 hydrant pits, 2km pipeline repair). Show readiness for larger refinery complexity.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>KWD 2,500–3,200 (~USD 8,200–10,500)</strong><br><em>Posted / market estimate</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.knpc.com/careers" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn btn-warning">Tailor + Monitor</button>
+                    </div>
+                </div>
+
+                <!-- Saudi Electricity Company -->
+                <div class="opportunity-card">
+                    <h3>Asset Maintenance Lead</h3>
+                    <p class="subtitle">Saudi Electricity Company (SEC) · Riyadh</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #999;">P3</strong> · <strong>5/10 fit</strong><br>Shortlist: 40–50%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Large government entity with stable hiring. Less competitive than corporate private sector.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Your PM methodology and team leadership apply. Government work = stability, benefits, long-term security. Good fallback option.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Bureaucratic hiring. Lower salary than corporate. Limited international exposure. Slower career progression.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Emphasize JIG compliance work, government audit experience, risk management (BCP work). Frame stability and reliability.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>SAR 170K–210K</strong><br><em>Market estimate (government scale)</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.se.com.sa/careers" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn">Monitor</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRACK 2: ASPIRATIONAL -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Track 2: Aspirational (3 roles)</h2>
+            </div>
+            <div class="section-content">
+                <p style="color: #666; margin-bottom: 1.5rem; font-size: 13px;">Director-level, consulting, and international-scope roles. Higher risk; require CV repositioning + network warm-up.</p>
+
+                <!-- Accenture -->
+                <div class="opportunity-card">
+                    <h3>Senior Operations Consultant (Maintenance & Reliability)</h3>
+                    <p class="subtitle">Accenture · Dubai / Remote</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #0066cc;">P1</strong> · <strong>6/10 fit</strong><br>Shortlist: 40–55%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Consulting firms increasingly hire deep-domain experts. Your PM Scale-up + BCP work shows strategic thinking.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">You've demonstrated strategic mindset: PM program design, 7% cost optimization, risk analysis (BCP, RCA). Consulting values operational depth + advisory credibility.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Career pivot is risky. Base salary may feel lateral vs. operations manager. Requires reframing into advisory language. Travel (40–60%) expected.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Reframe as advisory projects: "Designed & implemented enterprise-wide PM strategy for 1,307+ assets, achieving 10% downtime reduction and board-level compliance certification." Lead with outcomes.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>AED 180K–240K (~USD 49K–65K)</strong><br><em>Market estimate</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.accenture.com/ae-en/careers" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn">Stretch + Referral</button>
+                    </div>
+                </div>
+
+                <!-- McKinsey -->
+                <div class="opportunity-card">
+                    <h3>Associate Principal – Oil & Gas Reliability</h3>
+                    <p class="subtitle">McKinsey & Company · Dubai</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #ff9500;">P2</strong> · <strong>5/10 fit</strong><br>Shortlist: 25–40%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">McKinsey actively recruits from operations to staff O&G portfolios. Your JIG/EI/API expertise is valuable.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Partner model rewards domain expertise + analytical rigor. PM redesign and BCP show systems thinking.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Highly competitive. Prefers MBA. External lateral hires face scrutiny. Potential rotation (Dubai → London → Houston).</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Frame as strategic asset optimization. "Led enterprise transformation of 1,307+ asset portfolio." Emphasize JIG/IATA audit coordination and RCA/CAPA tool as process-improvement proof.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>AED 220K–300K+ (~USD 60K–82K+)</strong><br><em>Market estimate</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://careers.mckinsey.com/" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn btn-warning">Stretch / Monitor</button>
+                    </div>
+                </div>
+
+                <!-- AECOM -->
+                <div class="opportunity-card">
+                    <h3>Operations Director – Airport/Industrial Facilities</h3>
+                    <p class="subtitle">AECOM · Riyadh / Abu Dhabi</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #ff9500;">P2</strong> · <strong>7/10 fit</strong><br>Shortlist: 50–65%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">AECOM manages major Middle East airport infrastructure. Your aviation fuel systems expertise is rare.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">You have rare KFIA experience. AECOM managing KFIA operations would value your insider knowledge of airport fuel systems + compliance standards.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">AECOM is matrix-heavy; autonomy may be less. Competition from younger hires.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Lead with KFIA project portfolio: 88 hydrant pit upgrades, cathodic protection system rehab, Jet A-1 tank NDT/API 653. You're a credible advisor for Middle East airport O&M.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>SAR 240K–300K (~USD 64K–80K)</strong><br><em>Market estimate</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://careers.aecom.com/" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn">Tailor + Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRACK 3: PIVOT -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Track 3: Pivot (3 roles)</h2>
+            </div>
+            <div class="section-content">
+                <p style="color: #666; margin-bottom: 1.5rem; font-size: 13px;">Non-traditional: startups, AI/tech, adjacent industries. Higher risk but equity upside + innovation.</p>
+
+                <!-- PredAI Startup NEW -->
+                <div class="opportunity-card new">
+                    <h3>Operations Lead / Customer Success Engineer <span class="new-badge">NEW</span></h3>
+                    <p class="subtitle">PredAI (Predictive Maintenance Startup) · Remote (UK HQ)</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #0066cc;">P1 (NEW)</strong> · <strong>7/10 fit</strong><br>Shortlist: 50–65%<br><em>Funded Series B, actively hiring</em></div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Predictive maintenance AI sector growing. Startups seek domain experts to drive Middle East expansion. Your condition monitoring + RCA experience is valuable IP.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Your vibration analysis training + condition monitoring background = credibility. RCA/CAPA tool proves you can build process automation. Startups value operators who translate tech into customer ROI.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Early-stage risk (equity volatility). Salary lower than corporate. Requires selling/customer success mindset, not just managing.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Position as "bridge" between operations and technology. Lead: "Reduced equipment breakdown 10% via data-driven PM scheduling. Built predictive models for hydrant pit failures. Deployed RCA/CAPA tool reducing defect closure by 30%."</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>USD 55K–75K + 0.5–1% equity</strong><br><em>Market estimate (Series B funded)</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.linkedin.com/jobs/search/?keywords=predictive%20maintenance%20operations%20lead%20startup" target="_blank" class="btn btn-primary">Search on LinkedIn ↗</a>
+                        <button class="btn">Apply Now</button>
+                    </div>
+                </div>
+
+                <!-- Predictive Maintenance Startups (General) -->
+                <div class="opportunity-card">
+                    <h3>Operations Lead / Customer Success</h3>
+                    <p class="subtitle">Predictive Maintenance Startups (Senseye, Augmento, etc.) · Remote</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #ff9500;">P2</strong> · <strong>6/10 fit</strong><br>Shortlist: 35–50%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Predictive maintenance sector growing in Middle East. 3+ funded startups actively hiring. Low competition vs corporate.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Your vibration analysis + condition monitoring adds credibility to AI tools. Startups value operators who can translate technical features into customer ROI.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Early-stage risk (equity, funding volatility). Salary lower. Requires selling, not just managing.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Position as "bridge" between operations and technology. Highlight data-driven PM wins + RCA/CAPA tool as process automation proof.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>USD 50K–70K + equity</strong><br><em>Estimated</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://www.linkedin.com/jobs/search/?keywords=predictive%20maintenance%20operations%20middle%20east" target="_blank" class="btn btn-primary">Search LinkedIn ↗</a>
+                        <button class="btn btn-warning">Monitor + Apply</button>
+                    </div>
+                </div>
+
+                <!-- DP World -->
+                <div class="opportunity-card">
+                    <h3>Asset Reliability Manager</h3>
+                    <p class="subtitle">Port Authority (Jebel Ali, DP World) · Dubai</p>
+                    <div class="opp-grid">
+                        <div class="opp-item">
+                            <div class="opp-item-label">Priority & Fit</div>
+                            <div class="opp-item-content"><strong style="color: #999;">P3</strong> · <strong>6/10 fit</strong><br>Shortlist: 45–60%</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Signal</div>
+                            <div class="opp-item-content">Port machinery (cranes, conveyors, fuel barges) relies on predictive maintenance. Stable employer.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Why it fits</div>
+                            <div class="opp-item-content">Port fuel handling shares DNA with fuel farm background. Heavy equipment, downtime = loss, strict compliance culture.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Watch-outs</div>
+                            <div class="opp-item-content">Port ops culture differs (maritime, less aviation-specific). Potential offshore/harsh environment work.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">CV angle</div>
+                            <div class="opp-item-content">Emphasize reliability engineering + downtime cost-avoidance. Fuel-system PM expertise translates to fuel barge maintenance + tank integrity.</div>
+                        </div>
+                        <div class="opp-item">
+                            <div class="opp-item-label">Salary & Basis</div>
+                            <div class="opp-item-content"><strong>AED 150K–200K (~USD 41K–54K)</strong><br><em>Market estimate</em></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="https://careers.dpworld.com/" target="_blank" class="btn btn-primary">View Job Posting ↗</a>
+                        <button class="btn">Monitor</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKIP / REJECTED -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Skip/Rejected Roles (4)</h2>
+            </div>
+            <div class="section-content">
+                <table class="skip-table">
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Company</th>
+                            <th>Reason Rejected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Quality Assurance Engineer</strong></td>
+                            <td>Generic Tech Startup (non-energy)</td>
+                            <td>Below role seniority; no team leadership opportunity</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Maintenance Technician II</strong></td>
+                            <td>Industrial Services (unspecified)</td>
+                            <td>Too junior; you supervise 5+ team members already</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Spare Parts Coordinator</strong></td>
+                            <td>Local Supplier</td>
+                            <td>Below your management level; no strategic value</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HVAC Technician</strong></td>
+                            <td>Facilities Management (Generic)</td>
+                            <td>Aggregator-only postings; no direct link; unrelated to aviation/industrial O&M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CV MOVES THIS ROUND -->
+        <div class="section">
+            <div class="section-header">
+                <h2>CV Moves This Round (5 Changes)</h2>
+            </div>
+            <div class="section-content">
+                <div class="cv-move">
+                    <h3>Move 1: Reframe "Maintenance Supervisor" → "Operations Engineer / Asset Reliability Lead"</h3>
+                    <p class="cv-move-why"><strong>Why:</strong> Opens doors to Aramco/SABIC manager roles and consulting pathway. Current title undersells your strategic scope (PM program design, OPEX optimization, JIG audit leadership).</p>
+                    <div class="cv-move-example"><strong>LinkedIn headline:</strong> "Operations & Maintenance Engineering | JIG/EI/API Standards | Reliability & Asset Optimization | 12+ years aviation fuel systems"</div>
+                </div>
+
+                <div class="cv-move">
+                    <h3>Move 2: Quantify + Publicize JIG Audit Outcome (URGENT)</h3>
+                    <p class="cv-move-why"><strong>Why:</strong> This is your #1 differentiator. Moving from "Less than Satisfactory" → "Good" is board-level impact. Aramco, SABIC, consulting firms will notice. Especially important for Aramco application TODAY.</p>
+                    <div class="cv-move-example"><strong>CV highlight:</strong> "Elevated organizational JIG HSSE audit rating from substandard to good-standing—cross-departmental compliance initiative resulting in uninterrupted operational licensure and $X cost avoidance."</div>
+                </div>
+
+                <div class="cv-move">
+                    <h3>Move 3: Lead PM Redesign Narrative with Cost + Reliability Metrics</h3>
+                    <p class="cv-move-why"><strong>Why:</strong> Consulting roles value ROI language. Corporate roles value operational impact. Frame differently by audience.</p>
+                    <div class="cv-move-example"><strong>Corporate version:</strong> "Designed preventive maintenance schedule for 1,307+ assets across 8 facility codes, reducing breakdown hours 10% and extending asset service life." <strong>Consulting version:</strong> "Engineered $X annual cost avoidance through data-driven PM optimization and reliability engineering."</div>
+                </div>
+
+                <div class="cv-move">
+                    <h3>Move 4: Add "Process Improvement & Digitalization" Section</h3>
+                    <p class="cv-move-why"><strong>Why:</strong> Your RCA/CAPA tool + PM dashboards show technical confidence. Separates you from pure operations. Consulting + energy-tech value process automation.</p>
+                    <div class="cv-move-example"><strong>New bullet:</strong> "Designed and deployed offline RCA/CAPA digital tool with auto-generated reference tracking, Ishikawa analysis, and print-to-PDF reporting—reducing defect-closure cycle time by ~30% and eliminating manual documentation."</div>
+                </div>
+
+                <div class="cv-move">
+                    <h3>Move 5: Upgrade BCP Work Visibility</h3>
+                    <p class="cv-move-why"><strong>Why:</strong> Risk management + crisis leadership is valued in consulting and by large corporates. Currently buried; move up in CV.</p>
+                    <div class="cv-move-example"><strong>New section:</strong> "Risk & Business Continuity: Led ISO 22301-compliant BCP redesign covering 7 operational scenarios (supply disruption, geopolitical events, infrastructure failure), with executive-readiness documentation and Emergency Response protocols."</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="padding: 2rem; text-align: center; color: #999; font-size: 12px; border-top: 1px solid #e0e0e0;">
+            <p><strong>🎯 Today's Action Items:</strong></p>
+            <p>1. Click Aramco link + APPLY TODAY (posted 48 hrs ago)<br>2. Reach out to SABIC contact (use referral)<br>3. Implement CV Move #2 (JIG audit) in your resume<br>4. Tailor GE + KNPC for submission by Friday</p>
+            <p style="margin-top: 1.5rem;">Last updated: Friday, June 13, 2026 · 8:00 PM Riyadh Time</p>
+            <p><button onclick="window.print()" style="padding: 8px 16px; font-size: 12px; background: #f0f4f8; border: 1px solid #dfe5eb; border-radius: 4px; cursor: pointer;">📄 Print Dashboard</button></p>
+        </div>
+    </div>
+
+    <script>
+        function filterTable(priority) {
+            const rows = document.querySelectorAll('#masterTable tbody tr');
+            rows.forEach(row => {
+                if (priority === null) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = row.dataset.priority === priority ? '' : 'none';
+                }
+            });
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (event.target) {
+                event.target.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
