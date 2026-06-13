@@ -2,33 +2,29 @@ name: Update Job Dashboard Daily
 
 on:
   schedule:
-    # 8:00 PM Riyadh time (GMT+3) = 5:00 PM UTC
     - cron: '0 17 * * *'
-  
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
-      - name: Setup Node.js 24
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '24'
       
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
       
-      - name: Run job scraper
-        run: node update-jobs.js
+      - run: node update-jobs.js
       
-      - name: Commit and push changes
-        run: |
+      - run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Bot"
           git add *.html
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-update dashboard - $(date +%Y-%m-%d\ %H:%M:%S)" && git push)
+          git commit -m "🤖 Auto-update dashboard" || true
+          git push || true
