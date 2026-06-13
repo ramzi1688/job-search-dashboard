@@ -6,11 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-dashboard:
+  update:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    
     steps:
       - uses: actions/checkout@v4
       
@@ -18,13 +15,12 @@ jobs:
         with:
           node-version: '24'
       
-      - run: npm install
+      - name: Generate dashboard
+        run: node update-jobs.js
       
-      - run: node update-jobs.js
-      
-      - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
+      - name: Push changes
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "bot@dashboard.local"
           git add *.html
-          git commit -m "🤖 Auto-update dashboard" || true
-          git push || true
+          if git diff --quiet --cached; then echo "No changes"; else git commit -m "Update dashboard"; git push; fi
